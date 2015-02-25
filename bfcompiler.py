@@ -40,29 +40,27 @@ class BrainFuck(object):
 		self.loop = loop
 		return loop	
 
-	def while_loop(self,spot): #spot is the location in code. 
-		code_chunk = self.master[spot+1:self.loop[spot]]
-		time.sleep(1)
+	def while_loop(self,spot): #spot is the location in code.
+		print(spot) 
+		# try:
+		code_chunk = self.master[spot:self.loop[spot]+1]
+		# except KeyError:
+		# 	code_chunk = self.master[spot+1:self.loop[spot+1]]
+		time.sleep(0.5)
 		print(code_chunk)
-		while self.ptrs[self.loc_ptr] > 1:
+		loc_ptr = self.loc_ptr
+		while self.ptrs[loc_ptr] > 1:
 			self.out(code_chunk,spot)
-		# print(self.ptrs[0:7])
-		# print(self.output)
-		# while code[spot1] != ']':
-		# 	if code[spot1] == '[':
-		# 		self.while_loop(self.master, spot1)
-		# 	code1 += code[spot1]
-		# 	spot1 += 1
-			# print(code1)
 
 	def out(self,code=None,spot=0):
 		if code == None:
 			code = self.master
-
 		for index, char in enumerate(code):
-			# print(self.ptrs[0:5])
-			# index is the location in the code. 
-			# loc is the current position in the ptrs list. 
+			# print(self.output)
+			# print(self.ptrs[0:10])
+			# loc is the current position in the ptrs list.
+			if code != self.master and index == 0:
+				continue
 			if char == '+':
 				self.ptrs[self.loc_ptr] += 1
 			elif char == '-':
@@ -80,11 +78,9 @@ class BrainFuck(object):
 			elif char == ']':
 				continue
 
-
 if __name__ == "__main__":
 	foo = BrainFuck()
-	print(foo.brace_map())
-	print(foo.loop)
+	foo.brace_map()
 	foo.out()
 	# print(foo.master)
 	# foo.out()
