@@ -1,6 +1,6 @@
 import sys 
 import numpy as np 
-
+import time
 
 class BrainFuck(object):
 
@@ -27,20 +27,35 @@ class BrainFuck(object):
 		self.ptrs = np.zeros(100,dtype=int)
 		self.output = str()
 		self.loc_ptr = 0
-	def while_loop(self,code,spot): #spot is the location in the main code. 
-		code1 = str()
-		spot1 = spot+1
-		while code[spot1] != ']':
-			# if code[spot1] == '[':
-			# 	self.while_loop(self.master, spot1,self.loc_ptr)
-			code1 += code[spot1]
-			spot1 += 1
+
+	def brace_map(self):
+		opening = []
+		loop = {}
+		for index, char in enumerate(self.master):
+			if char == '[':
+				opening.append(index)
+			elif char == ']':
+				begin = opening.pop()
+				loop[begin] = index
+		self.loop = loop
+		return loop	
+
+	def while_loop(self,spot): #spot is the location in code. 
+		code_chunk = self.master[spot+1:self.loop[spot]]
+		time.sleep(1)
+		print(code_chunk)
+		while self.ptrs[self.loc_ptr] > 1:
+			self.out(code_chunk,spot)
+		# print(self.ptrs[0:7])
+		# print(self.output)
+		# while code[spot1] != ']':
+		# 	if code[spot1] == '[':
+		# 		self.while_loop(self.master, spot1)
+		# 	code1 += code[spot1]
+		# 	spot1 += 1
 			# print(code1)
 
-		while self.ptrs[self.loc_ptr] > 1:
-			self.out(code1)
-
-	def out(self,code=None,loc_ptr=0):
+	def out(self,code=None,spot=0):
 		if code == None:
 			code = self.master
 
@@ -61,14 +76,18 @@ class BrainFuck(object):
 			elif char == '.':
 				self.output += chr(self.ptrs[self.loc_ptr])
 			elif char == '[':
-				self.while_loop(code, index)
+				self.while_loop(index+spot)
 			elif char == ']':
 				continue
 
+
 if __name__ == "__main__":
 	foo = BrainFuck()
-	# print(foo.master)
+	print(foo.brace_map())
+	print(foo.loop)
 	foo.out()
+	# print(foo.master)
+	# foo.out()
 	print(foo.output)
-	print(foo.output, foo.ptrs[0:6])
+	# print(foo.output, foo.ptrs[0:10])
 
